@@ -71,7 +71,7 @@
             border-bottom: 1px solid rgba(255,255,255,0.1);
             position: sticky;
             top: 0;
-            z-index: 1000;
+            z-index: 2000; /* Higher z-index to stay above ads */
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         .logo {
@@ -83,6 +83,7 @@
             align-items: center;
             gap: 10px;
             transition: var(--transition);
+            cursor: pointer;
         }
         .logo:hover { transform: scale(1.02); }
         .nav-links {
@@ -113,15 +114,16 @@
         /* --- AD PLACEMENTS --- */
         .ad-slot {
             width: 100%;
-            max-width: 728px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             margin: 15px auto;
-            background: rgba(0,0,0,0.1);
-            border: 1px dashed var(--text-muted);
+            background: rgba(0,0,0,0.05);
             text-align: center;
             padding: 10px;
-            color: var(--text-muted);
-            font-size: 0.8rem;
             border-radius: 8px;
+            min-height: 60px;
+            z-index: 1; /* Lower priority */
         }
 
         /* --- SCREEN MANAGEMENT --- */
@@ -131,6 +133,8 @@
             justify-content: center;
             align-items: center;
             padding: 15px;
+            position: relative;
+            z-index: 1000; /* Ensure app content is above pop-under layers */
         }
         .screen {
             display: none;
@@ -171,6 +175,7 @@
             flex-direction: column;
             align-items: center;
             gap: 15px;
+            z-index: 1100;
         }
         .menu-card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 20px 30px -10px rgba(99, 102, 241, 0.3); }
         .menu-card .icon { font-size: 2.5rem; color: var(--primary); }
@@ -184,6 +189,7 @@
             border-radius: 30px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             position: relative;
+            z-index: 1100;
         }
 
         .top-bar {
@@ -233,6 +239,8 @@
             transition: var(--transition);
             font-family: 'Poppins', sans-serif;
             margin-bottom: 20px;
+            position: relative;
+            z-index: 1200;
         }
 
         /* --- RESPONSIVE MECHANICAL KEYBOARD --- */
@@ -247,6 +255,8 @@
             border: 3px solid #1e293b;
             box-sizing: border-box;
             overflow-x: auto;
+            position: relative;
+            z-index: 1200;
         }
         .keyboard {
             display: flex;
@@ -310,6 +320,7 @@
             border: 1px solid rgba(255,255,255,0.05);
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             transition: var(--transition);
+            z-index: 1100;
         }
         .control-card:hover {
             border-color: var(--primary);
@@ -384,46 +395,6 @@
             outline: none;
         }
 
-        /* --- UPGRADED ANALYTICS DASHBOARD --- */
-        .analytics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            width: 100%;
-            margin-bottom: 30px;
-        }
-        .analytics-card {
-            background: var(--bg-card);
-            padding: 20px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.05);
-            text-align: center;
-            transition: var(--transition);
-        }
-        .analytics-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-        }
-        .analytics-card i { font-size: 1.5rem; color: var(--primary); margin-bottom: 10px; }
-        .analytics-card h4 { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px; }
-        .analytics-card .value { font-size: 2rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
-
-        .chart-container {
-            background: var(--bg-card);
-            padding: 30px;
-            border-radius: 30px;
-            width: 100%;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        .chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .chart-header h3 { font-size: 1.3rem; display: flex; align-items: center; gap: 10px; }
-
         .result-container {
             background: var(--bg-card);
             padding: 40px 20px;
@@ -432,6 +403,7 @@
             width: 100%;
             max-width: 600px;
             border: 2px solid var(--primary);
+            z-index: 1100;
         }
         .result-circle {
             width: 130px; height: 130px;
@@ -458,10 +430,11 @@
             gap: 8px;
             color: white;
             font-family: 'Poppins', sans-serif;
+            z-index: 1200;
         }
         .btn-primary { background: var(--primary); box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4); }
         .btn-secondary { background: #475569; }
-        .btn-back { position: absolute; top: 20px; left: 20px; z-index: 10; }
+        .btn-back { position: absolute; top: 20px; left: 20px; z-index: 1200; }
         .btn:hover { opacity: 0.9; transform: scale(1.05); }
 
         #streak-badge {
@@ -488,6 +461,7 @@
             max-width: 800px;
             border: 1px solid rgba(255,255,255,0.05);
             box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            z-index: 1100;
         }
         .doc-header { text-align: center; margin-bottom: 20px; }
         .doc-header h2 { font-size: 2rem; color: var(--primary); margin-bottom: 10px; }
@@ -501,6 +475,7 @@
             border-top: 1px solid rgba(255,255,255,0.1);
             color: var(--text-muted);
             font-size: 0.85rem;
+            z-index: 1000;
         }
         .footer-links {
             display: flex;
@@ -526,15 +501,14 @@
             .key { height: 40px; font-size: 0.7rem; padding: 0 2px; }
             .hero-section p { font-size: 0.9rem; }
             .control-center { grid-template-columns: 1fr; }
-            .analytics-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body class="theme-dark">
 
-    <div class="ad-slot">
-        <!-- PASTE YOUR ADSTERRA 728x90 BANNER SCRIPT HERE -->
-        <span>Ad Placement: Top Banner (728x90)</span>
+    <!-- ADSTERRA TOP BANNER -->
+    <div class="ad-slot" id="top-ad-container">
+        <!-- Ad injected via JS -->
     </div>
 
     <nav>
@@ -564,6 +538,10 @@
                 <h1>Master Your Typing Speed</h1>
                 <p>The most advanced, free, and professional typing tool for the modern web.</p>
             </div>
+            
+            <!-- NATIVE BANNER AD -->
+            <div class="ad-slot" id="native-ad-container"></div>
+
             <div class="menu-grid">
                 <div class="menu-card" onclick="navigateTo('screen-typing')">
                     <div class="icon"><i class="fas fa-rocket"></i></div>
@@ -604,7 +582,7 @@
             </div>
         </div>
 
-        <!-- UPGRADED CONTROL CENTER SCREEN -->
+        <!-- SETTINGS SCREEN -->
         <div id="screen-settings" class="screen">
             <button class="btn btn-secondary btn-back" onclick="navigateTo('screen-home')">← Home</button>
             <h2 style="margin-bottom: 30px; font-size: 2.2rem; text-align: center;">Control Center</h2>
@@ -675,7 +653,7 @@
             </div>
         </div>
 
-        <!-- UPGRADED ANALYTICS SCREEN -->
+        <!-- ANALYTICS SCREEN -->
         <div id="screen-analytics" class="screen">
             <button class="btn btn-secondary btn-back" onclick="navigateTo('screen-home')">← Home</button>
             <h2 style="margin-bottom: 30px; font-size: 2.2rem; text-align: center;">Performance Dashboard</h2>
@@ -761,9 +739,8 @@
     </div>
 
     <!-- ADSTERRA BOTTOM BANNER -->
-    <div class="ad-slot">
-        <!-- PASTE YOUR ADSTERRA BOTTOM BANNER SCRIPT HERE -->
-        <span>Ad Placement: Bottom Banner (728x90)</span>
+    <div class="ad-slot" id="bottom-ad-container">
+        <!-- Ad injected via JS -->
     </div>
 
     <footer>
@@ -771,10 +748,64 @@
             <a onclick="navigateTo('screen-tos')">Terms of Service</a>
             <a onclick="navigateTo('screen-privacy')">Privacy Policy</a>
             <a onclick="navigateTo('screen-about')">About</a>
-            <a href="#">Contact Us</a>
+            <a href="https://www.profitableratecpmnetwork.com/ey3zei5mzw?key=1b7e13909ee60ce70832d10a5234bd6f" target="_blank">Special Offer</a>
         </div>
         <p>&copy; 2026 TypingPro Ultra. All rights reserved. Designed for Speed.</p>
     </footer>
+
+    <!-- GLOBAL ADSTERRA SCRIPTS (Loaded with extreme care to prevent app crash) -->
+    <script>
+        window.addEventListener('load', function() {
+            try {
+                // 1. Popunder
+                const popunder = document.createElement('script');
+                popunder.src = "https://pl28557860.profitableratecpmnetwork.com/40/15/aa/4015aa4808910aa0baabeaac05beb1ec.js";
+                document.body.appendChild(popunder);
+
+                // 2. Social Bar
+                const socialBar = document.createElement('script');
+                socialBar.src = "https://pl28557913.profitableratecpmnetwork.com/ba/75/b5/ba75b5b424ecaf3257f3e104ecf8a593.js";
+                document.body.appendChild(socialBar);
+
+                // 3. Top Banner
+                const topAd = document.getElementById('top-ad-container');
+                if(topAd) {
+                    const topScript = document.createElement('script');
+                    topScript.innerHTML = `atOptions = {'key': 'adaa0e3b081bce4f46126c6cb63a3358', 'format': 'iframe', 'height': 50, 'width': 320, 'params': {}};`;
+                    topAd.appendChild(topScript);
+                    const topInvoke = document.createElement('script');
+                    topInvoke.src = "https://www.highrevenueformat.com/adaa0e3b081bce4f46126c6cb63a3358/invoke.js";
+                    topAd.appendChild(topInvoke);
+                }
+
+                // 4. Bottom Banner
+                const botAd = document.getElementById('bottom-ad-container');
+                if(botAd) {
+                    const botScript = document.createElement('script');
+                    botScript.innerHTML = `atOptions = {'key': 'adaa0e3b081bce4f46126c6cb63a3358', 'format': 'iframe', 'height': 50, 'width': 320, 'params': {}};`;
+                    botAd.appendChild(botScript, document.createElement('script')); // Safety check
+                    const botInvoke = document.createElement('script');
+                    botInvoke.src = "https://www.highrevenueformat.com/adaa0e3b081bce4f46126c6cb63a3358/invoke.js";
+                    botAd.appendChild(botInvoke);
+                }
+
+                // 5. Native Banner
+                const natAd = document.getElementById('native-ad-container');
+                if(natAd) {
+                    const natScript = document.createElement('script');
+                    natScript.async = true;
+                    natScript.setAttribute('data-cfasync', 'false');
+                    natScript.src = "https://pl28557903.profitableratecpmnetwork.com/33abaeab89b50be9fa52b02b4727b13a/invoke.js";
+                    natAd.appendChild(natScript);
+                    const natDiv = document.createElement('div');
+                    natDiv.id = "container-33abaeab89b50be9fa52b02b4727b13a";
+                    natAd.appendChild(natDiv);
+                }
+            } catch(e) {
+                console.warn("Ads failed to load, but app is safe.", e);
+            }
+        });
+    </script>
 
     <script>
         const texts = {
@@ -785,16 +816,18 @@
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playSound(freq, type = 'sine', duration = 0.1) {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = type;
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + duration);
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e) {}
         }
 
         let timeLeft, timerInterval, isPlaying = false, charIndex = 0, mistakes = 0, currentText = "", streak = 0, wpmData = [];
@@ -820,7 +853,8 @@
 
         function navigateTo(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
+            const target = document.getElementById(screenId);
+            if(target) target.classList.add('active');
             
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
             const navBtnMap = {
@@ -830,7 +864,8 @@
                 'screen-analytics': 'nav-analytics'
             };
             if(navBtnMap[screenId]) {
-                document.getElementById(navBtnMap[screenId]).classList.add('active');
+                const activeBtn = document.getElementById(navBtnMap[screenId]);
+                if(activeBtn) activeBtn.classList.add('active');
             }
 
             if(screenId === 'screen-typing') initGame();
@@ -855,22 +890,16 @@
                     const span = document.createElement('div');
                     span.className = 'key';
                     span.innerText = key;
-                    
                     if(["Backspace", "Tab", "Caps", "Enter", "Shift"].includes(key)) span.classList.add('wide');
                     if(key === "Space") span.classList.add('space');
-                    
                     const cleanKey = key.toLowerCase() === "space" ? " " : key.toLowerCase();
                     span.id = `key-${cleanKey}`;
-                    
                     span.onclick = () => {
-                        if(!isPlaying && elements.input.disabled === false) {
-                            elements.input.focus();
-                        }
+                        if(!isPlaying && elements.input.disabled === false) elements.input.focus();
                         const event = new Event('input', { bubbles: true });
                         elements.input.value += (key === "Space" ? " " : key === "Backspace" ? "" : key);
                         elements.input.dispatchEvent(event);
                     };
-                    
                     rowDiv.appendChild(span);
                 });
                 elements.keyboard.appendChild(rowDiv);
@@ -881,7 +910,6 @@
             clearInterval(timerInterval);
             isPlaying = false; charIndex = 0; mistakes = 0; streak = 0; wpmData = [];
             timeLeft = parseInt(elements.time.value);
-            
             elements.timer.innerText = timeLeft + "s";
             elements.wpm.innerText = "0";
             elements.acc.innerText = "100%";
@@ -896,7 +924,6 @@
                 const options = texts[elements.diff.value];
                 currentText = options[Math.floor(Math.random() * options.length)];
             }
-
             renderText();
             elements.input.focus();
         }
@@ -935,21 +962,17 @@
             clearInterval(timerInterval);
             isPlaying = false;
             elements.input.disabled = true;
-            
             const finalWpm = parseInt(elements.wpm.innerText);
             const best = localStorage.getItem('typingProBest') || 0;
             if (finalWpm > best) localStorage.setItem('typingProBest', finalWpm);
-
             let rank = "🐢 Snail";
             if (finalWpm > 80) rank = "⚡ Flash";
             else if (finalWpm > 50) rank = "🐆 Cheetah";
             else if (finalWpm > 30) rank = "🐇 Rabbit";
-
             document.getElementById('res-wpm').innerText = finalWpm;
             document.getElementById('res-acc').innerText = elements.acc.innerText;
             document.getElementById('res-err').innerText = mistakes;
             document.getElementById('res-rank').innerText = rank;
-            
             navigateTo('screen-result');
             playSound(200, 'square', 0.3);
         }
@@ -957,12 +980,10 @@
         elements.input.addEventListener('input', () => {
             const characters = elements.display.querySelectorAll('.char');
             let typedChar = elements.input.value.split("")[charIndex];
-
             if (!isPlaying) {
                 isPlaying = true;
                 startTimer();
             }
-
             if (typedChar == null) {
                 if (charIndex > 0) {
                     charIndex--;
@@ -982,14 +1003,12 @@
                 }
                 charIndex++;
             }
-
             if (streak >= 5) {
                 elements.streakBadge.classList.add('show');
                 elements.streakCount.innerText = streak;
             } else {
                 elements.streakBadge.classList.remove('show');
             }
-
             characters.forEach(span => span.classList.remove('current'));
             if (charIndex < characters.length) {
                 characters[charIndex].classList.add('current');
@@ -1000,7 +1019,6 @@
             } else {
                 endGame();
             }
-
             let accuracy = Math.round(((charIndex - mistakes) / charIndex) * 100);
             elements.acc.innerText = (isNaN(accuracy) || accuracy < 0 ? 100 : accuracy) + "%";
         });
@@ -1008,19 +1026,13 @@
         function renderAnalytics() {
             const best = localStorage.getItem('typingProBest') || 0;
             document.getElementById('best-wpm').innerText = best;
-            
             const currentWpm = wpmData.length > 0 ? wpmData[wpmData.length - 1] : 0;
             document.getElementById('current-session-wpm').innerText = currentWpm;
-            
-            // Mock average accuracy for UI
             document.getElementById('avg-accuracy').innerText = "95%"; 
-            
             const ctx = document.getElementById('wpmChart').getContext('2d');
             if(chart) chart.destroy();
-            
             const plotData = wpmData.length > 0 ? wpmData : [0];
             const labels = plotData.map((_, i) => i + 1);
-
             chart = new Chart(ctx, {
                 type: 'line',
                 data: {
