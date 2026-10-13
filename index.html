@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TypingPro Ultra | Master Your Typing Speed & Accuracy</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Improve your typing speed and accuracy with TypingPro Ultra. The most professional free typing master web app.">
+    <meta name="keywords" content="typing master, increase typing speed, typing test, WPM calculator, free typing app">
+    
+    <!-- Google Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --correct: #22c55e;
+            --wrong: #ef4444;
+            --accent: #f59e0b;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --key-bg: #334155;
+            --key-shadow: #0f172a;
+        }
+
+        body.theme-light {
+            --bg-dark: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --key-bg: #cbd5e1;
+            --key-shadow: #94a3b8;
+        }
+        body.theme-cyber {
+            --primary: #00ff41;
+            --primary-hover: #00cc33;
+            --bg-dark: #000000;
+            --bg-card: #0a0a0a;
+            --text-main: #00ff41;
+            --text-muted: #008f11;
+            --key-bg: #002200;
+            --key-shadow: #000000;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* --- NAVIGATION BAR --- */
+        nav {
+            background: var(--bg-card);
+            padding: 12px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+        }
+        .logo:hover { transform: scale(1.02); }
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .nav-btn {
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 12px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: transparent;
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+        .nav-btn i { font-size: 0.8rem; color: var(--text-muted); transition: var(--transition); }
+        .nav-btn:hover { background: rgba(255,255,255,0.05); color: var(--primary); border-color: rgba(99, 102, 241, 0.3); }
+        .nav-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); }
+        .nav-btn.active i { color: white; }
+
+        /* --- AD PLACEMENTS --- */
+        .ad-slot {
+            width: 100%;
+            max-width: 728px;
+            margin: 15px auto;
+            background: rgba(0,0,0,0.1);
+            border: 1px dashed var(--text-muted);
+            text-align: center;
+            padding: 10px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            border-radius: 8px;
+        }
+
+        /* --- SCREEN MANAGEMENT --- */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+        .screen {
+            display: none;
+            width: 100%;
+            max-width: 1100px;
+            animation: slideIn 0.5s ease-out;
+            flex-direction: column;
+            align-items: center;
+        }
+        .screen.active { display: flex; }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- HOME SCREEN --- */
+        .hero-section { text-align: center; margin-bottom: 30px; }
+        .hero-section h1 { font-size: 2.5rem; font-weight: 700; background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
+        .hero-section p { color: var(--text-muted); font-size: 1rem; }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            width: 100%;
+        }
+
+        .menu-card {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 24px;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .menu-card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 20px 30px -10px rgba(99, 102, 241, 0.3); }
+        .menu-card .icon { font-size: 2.5rem; color: var(--primary); }
+        .menu-card h3 { font-size: 1.3rem; }
+
+        /* --- TYPING SCREEN --- */
+        .typing-container {
+            width: 100%;
+            background: var(--bg-card);
+            padding: 30px 15px;
+            border-radius: 30px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .stat-pill {
+            background: rgba(0,0,0,0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            border: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.8rem;
+        }
+        .stat-pill span { color: var(--text-muted); font-size: 0.7rem; margin-right: 5px; }
+
+        #text-display {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-align: left;
+            color: var(--text-muted);
+            user-select: none;
+            min-height: 100px;
+            word-wrap: break-word;
+        }
+
+        .char { position: relative; }
+        .correct { color: var(--correct); }
+        .wrong { color: var(--wrong); background: rgba(239, 68, 68, 0.2); border-radius: 4px; }
+        .current { color: var(--text-main); background: rgba(99, 102, 241, 0.3); border-radius: 4px; box-shadow: 0 0 0 2px var(--primary); }
+
+        #input-field {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            background: #0f172a;
+            border: 2px solid #334155;
+            border-radius: 12px;
+            color: white;
+            outline: none;
+            transition: var(--transition);
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 20px;
+        }
+
+        /* --- RESPONSIVE MECHANICAL KEYBOARD --- */
+        .keyboard-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 15px 5px;
+            background: #0f172a;
+            border-radius: 15px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+            border: 3px solid #1e293b;
+            box-sizing: border-box;
+            overflow-x: auto;
+        }
+        .keyboard {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            width: 100%;
+            max-width: 1100px;
+        }
+        .kb-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 5px;
+            width: 100%;
+        }
+        .key {
+            background: linear-gradient(145deg, var(--key-bg), var(--key-shadow));
+            color: var(--text-main);
+            padding: 0 5px;
+            flex: 1;
+            height: 42px;
+            text-align: center;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            box-shadow: 0 3px 0 #000, 0 4px 8px rgba(0,0,0,0.4);
+            transition: all 0.1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            border: 1px solid rgba(255,255,255,0.05);
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        .key.active {
+            background: linear-gradient(145deg, var(--primary), var(--primary-hover));
+            color: white;
+            transform: translateY(3px);
+            box-shadow: 0 0px 0 #000, 0 0 15px var(--primary);
+            border: 1px solid #fff;
+        }
+        .key.wide { flex: 2; }
+        .key.space { flex: 6; }
+        .row-2 { padding-left: 0.5%; }
+        .row-3 { padding-left: 1%; }
+        .row-4 { padding-left: 1.5%; }
+
+        /* --- UPGRADED CONTROL CENTER --- */
+        .control-center {
+            width: 100%;
+            max-width: 1000px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+        .control-card {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transition: var(--transition);
+        }
+        .control-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+        .control-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary);
+        }
+        .control-group {
+            margin-bottom: 20px;
+        }
+        .control-group label {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        .custom-select {
+            width: 100%;
+            padding: 12px;
+            background: #0f172a;
+            color: white;
+            border: 2px solid #334155;
+            border-radius: 12px;
+            outline: none;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Poppins', sans-serif;
+        }
+        .custom-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+        .custom-slider {
+            width: 100%;
+            height: 6px;
+            background: #334155;
+            border-radius: 5px;
+            outline: none;
+            appearance: none;
+            cursor: pointer;
+        }
+        .custom-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--primary);
+        }
+        .custom-textarea {
+            width: 100%;
+            height: 120px;
+            padding: 15px;
+            background: #0f172a;
+            color: white;
+            border: 2px solid #334155;
+            border-radius: 12px;
+            resize: none;
+            font-family: 'Poppins', sans-serif;
+            transition: var(--transition);
+        }
+        .custom-textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        /* --- UPGRADED ANALYTICS DASHBOARD --- */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        .analytics-card {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+            transition: var(--transition);
+        }
+        .analytics-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+        .analytics-card i { font-size: 1.5rem; color: var(--primary); margin-bottom: 10px; }
+        .analytics-card h4 { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px; }
+        .analytics-card .value { font-size: 2rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+
+        .chart-container {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 30px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .chart-header h3 { font-size: 1.3rem; display: flex; align-items: center; gap: 10px; }
+
+        .result-container {
+            background: var(--bg-card);
+            padding: 40px 20px;
+            border-radius: 30px;
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            border: 2px solid var(--primary);
+        }
+        .result-circle {
+            width: 130px; height: 130px;
+            border-radius: 50%;
+            border: 8px solid var(--primary);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+        }
+        .result-circle h2 { font-size: 2rem; color: var(--primary); }
+
+        .btn {
+            padding: 12px 25px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            border-radius: 12px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+        }
+        .btn-primary { background: var(--primary); box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4); }
+        .btn-secondary { background: #475569; }
+        .btn-back { position: absolute; top: 20px; left: 20px; z-index: 10; }
+        .btn:hover { opacity: 0.9; transform: scale(1.05); }
+
+        #streak-badge {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            font-size: 1.3rem;
+            opacity: 0;
+            transition: var(--transition);
+            background: var(--accent);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4);
+        }
+        #streak-badge.show { opacity: 1; transform: scale(1.1); }
+
+        /* --- DOCS --- */
+        .doc-container {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 30px;
+            width: 100%;
+            max-width: 800px;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .doc-header { text-align: center; margin-bottom: 20px; }
+        .doc-header h2 { font-size: 2rem; color: var(--primary); margin-bottom: 10px; }
+        .doc-content { color: var(--text-muted); line-height: 1.7; font-size: 0.95rem; text-align: left; }
+        .doc-content h3 { color: var(--text-main); margin: 15px 0 8px; }
+
+        footer {
+            background: var(--bg-card);
+            padding: 25px 5%;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .footer-links a { color: var(--text-muted); text-decoration: none; transition: var(--transition); cursor: pointer; }
+        .footer-links a:hover { color: var(--primary); }
+
+        @media (max-width: 600px) {
+            .hero-section h1 { font-size: 2.2rem; }
+            nav { padding: 10px 3%; }
+            .logo { font-size: 1.2rem; }
+            .nav-links { gap: 5px; }
+            .nav-btn { padding: 6px 10px; font-size: 0.75rem; }
+            .nav-btn span { display: none; }
+            .nav-btn i { font-size: 1rem; }
+            .typing-container { padding: 20px 10px; }
+            #text-display { font-size: 1.1rem; }
+            .top-bar { justify-content: center; }
+            .key { height: 40px; font-size: 0.7rem; padding: 0 2px; }
+            .hero-section p { font-size: 0.9rem; }
+            .control-center { grid-template-columns: 1fr; }
+            .analytics-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body class="theme-dark">
+
+    <div class="ad-slot">
+        <!-- PASTE YOUR ADSTERRA 728x90 BANNER SCRIPT HERE -->
+        <span>Ad Placement: Top Banner (728x90)</span>
+    </div>
+
+    <nav>
+        <a href="#" class="logo" onclick="navigateTo('screen-home')">
+            <i class="fas fa-keyboard"></i> TypingPro Ultra
+        </a>
+        <div class="nav-links">
+            <a href="#" class="nav-btn active" id="nav-home" onclick="navigateTo('screen-home')">
+                <i class="fas fa-home"></i> <span>Home</span>
+            </a>
+            <a href="#" class="nav-btn" id="nav-typing" onclick="navigateTo('screen-typing')">
+                <i class="fas fa-play"></i> <span>Start Now</span>
+            </a>
+            <a href="#" class="nav-btn" id="nav-settings" onclick="navigateTo('screen-settings')">
+                <i class="fas fa-cog"></i> <span>Settings</span>
+            </a>
+            <a href="#" class="nav-btn" id="nav-analytics" onclick="navigateTo('screen-analytics')">
+                <i class="fas fa-chart-bar"></i> <span>Stats</span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="main-wrapper">
+        <!-- HOME SCREEN -->
+        <div id="screen-home" class="screen active">
+            <div class="hero-section">
+                <h1>Master Your Typing Speed</h1>
+                <p>The most advanced, free, and professional typing tool for the modern web.</p>
+            </div>
+            <div class="menu-grid">
+                <div class="menu-card" onclick="navigateTo('screen-typing')">
+                    <div class="icon"><i class="fas fa-rocket"></i></div>
+                    <h3>Start Typing</h3>
+                    <p style="color:var(--text-muted)">Enter the arena and test your current WPM</p>
+                </div>
+                <div class="menu-card" onclick="navigateTo('screen-settings')">
+                    <div class="icon"><i class="fas fa-sliders-h"></i></div>
+                    <h3>Personalize</h3>
+                    <p style="color:var(--text-muted)">Change themes, fonts, and custom text</p>
+                </div>
+                <div class="menu-card" onclick="navigateTo('screen-analytics')">
+                    <div class="icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>My Progress</h3>
+                    <p style="color:var(--text-muted)">Analyze your growth and all-time records</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TYPING SCREEN -->
+        <div id="screen-typing" class="screen">
+            <button class="btn btn-secondary btn-back" onclick="navigateTo('screen-home')">← Home</button>
+            <div class="typing-container">
+                <div class="top-bar">
+                    <div class="stat-pill"><span>Time:</span> <strong id="timer">60s</strong></div>
+                    <div class="stat-pill"><span>WPM:</span> <strong id="wpm">0</strong></div>
+                    <div class="stat-pill"><span>Acc:</span> <strong id="accuracy">100%</strong></div>
+                    <div class="stat-pill"><span>Mistakes:</span> <strong id="mistake-count">0</strong></div>
+                    <div id="streak-badge">🔥 <span id="streak-count">0</span></div>
+                </div>
+
+                <div id="text-display"></div>
+                <input type="text" id="input-field" placeholder="Type to begin..." autocomplete="off">
+                
+                <div class="keyboard-wrapper">
+                    <div class="keyboard" id="virtual-keyboard"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- UPGRADED CONTROL CENTER SCREEN -->
+        <div id="screen-settings" class="screen">
+            <button class="btn btn-secondary btn-back" onclick="navigateTo('screen-home')">← Home</button>
+            <h2 style="margin-bottom: 30px; font-size: 2.2rem; text-align: center;">Control Center</h2>
+            
+            <div class="control-center">
+                <div class="control-card">
+                    <h3><i class="fas fa-gamepad"></i> Challenge Config</h3>
+                    <div class="control-group">
+                        <label>Difficulty Level</label>
+                        <select id="difficulty" class="custom-select">
+                            <option value="easy">Easy (Beginner)</option>
+                            <option value="medium">Medium (Intermediate)</option>
+                            <option value="hard">Hard (Professional)</option>
+                            <option value="custom">✨ Custom Text</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Time Limit</label>
+                        <select id="time-limit" class="custom-select">
+                            <option value="30">30 Seconds</option>
+                            <option value="60" selected>60 Seconds</option>
+                            <option value="120">120 Seconds</option>
+                        </select>
+                    </div>
+                    <div class="control-group" id="custom-text-box" style="display:none;">
+                        <label>Custom Text Area</label>
+                        <textarea id="custom-text-input" class="custom-textarea" placeholder="Paste your custom practice text here..."></textarea>
+                    </div>
+                </div>
+
+                <div class="control-card">
+                    <h3><i class="fas fa-palette"></i> Visuals & Theme</h3>
+                    <div class="control-group">
+                        <label>Appearance Style</label>
+                        <select id="theme-select" class="custom-select">
+                            <option value="dark">Midnight Blue</option>
+                            <option value="light">Clean White</option>
+                            <option value="cyber">Cyber Matrix</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Text Scale</label>
+                        <input type="range" id="font-size-slider" class="custom-slider" min="1" max="3" step="0.1" value="1.5">
+                    </div>
+                    <div style="margin-top: 25px;">
+                        <button class="btn btn-primary" style="width:100%; justify-content:center; padding: 15px;" onclick="navigateTo('screen-typing')">
+                            <i class="fas fa-check-circle"></i> Apply & Start Practice
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RESULT SCREEN -->
+        <div id="screen-result" class="screen">
+            <div class="result-container">
+                <div class="result-circle">
+                    <span style="font-size: 0.9rem; color: var(--text-muted);">FINAL WPM</span>
+                    <h2 id="res-wpm">0</h2>
+                </div>
+                <h2 id="res-rank" style="margin-bottom: 20px; color: var(--accent);">Rank: -</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px;">
+                    <div class="stat-pill" style="text-align:center"><span>Accuracy:</span> <strong id="res-acc">0%</strong></div>
+                    <div class="stat-pill" style="text-align:center"><span>Mistakes:</span> <strong id="res-err">0</strong></div>
+                </div>
+                <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="navigateTo('screen-home')">Main Menu</button>
+                <button class="btn btn-secondary" style="width:100%; justify-content:center; margin-top:10px;" onclick="initGame(); navigateTo('screen-typing')">Try Again</button>
+            </div>
+        </div>
+
+        <!-- UPGRADED ANALYTICS SCREEN -->
+        <div id="screen-analytics" class="screen">
+            <button class="btn btn-secondary btn-back" onclick="navigateTo('screen-home')">← Home</button>
+            <h2 style="margin-bottom: 30px; font-size: 2.2rem; text-align: center;">Performance Dashboard</h2>
+            
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <i class="fas fa-trophy"></i>
+                    <h4>ALL-TIME BEST</h4>
+                    <div class="value" id="best-wpm">0 <small style="font-size:1rem">WPM</small></div>
+                </div>
+                <div class="analytics-card">
+                    <i class="fas fa-bullseye"></i>
+                    <h4>AVG ACCURACY</h4>
+                    <div class="value" id="avg-accuracy">0<small style="font-size:1rem">%</small></div>
+                </div>
+                <div class="analytics-card">
+                    <i class="fas fa-bolt"></i>
+                    <h4>CURRENT SESSION</h4>
+                    <div class="value" id="current-session-wpm">0 <small style="font-size:1rem">WPM</small></div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3><i class="fas fa-chart-line" style="color:var(--primary)"></i> WPM Progress Curve</h3>
+                    <div class="stat-pill">Real-time Tracking</div>
+                </div>
+                <div style="position: relative; height: 300px; width: 100%;">
+                    <canvas id="wpmChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABOUT SCREEN -->
+        <div id="screen-about" class="screen">
+            <button class="btn btn-secondary btn-back" onclick="navigateTo('screen-home')">← Home</button>
+            <div class="doc-container">
+                <div class="doc-header">
+                    <h2>About TypingPro Ultra</h2>
+                    <p>The Future of Typing Mastery</p>
+                </div>
+                <div class="doc-content">
+                    <p>TypingPro Ultra is a high-performance web application designed for individuals who want to increase their typing speed and accuracy using modern, data-driven methods.</p>
+                    <h3>Our Mission</h3>
+                    <p>We believe that typing is a fundamental skill in the digital age. Our mission is to provide a free, professional-grade tool that helps users move from beginner to expert through real-time feedback and analytics.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRIVACY POLICY SCREEN -->
+        <div id="screen-privacy" class="screen">
+            <button class="btn btn-secondary btn-back" onclick="navigateTo('screen-home')">← Home</button>
+            <div class="doc-container">
+                <div class="doc-header">
+                    <h2>Privacy Policy</h2>
+                    <p>Your data safety is our priority</p>
+                </div>
+                <div class="doc-content">
+                    <h3>1. Data Collection</h3>
+                    <p>TypingPro Ultra does not collect any personal identifying information (PII).</p>
+                    <h3>2. Local Storage</h3>
+                    <p>Your high scores and settings are stored locally on your own browser using <b>localStorage</b>.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TERMS OF SERVICE SCREEN -->
+        <div id="screen-tos" class="screen">
+            <button class="btn btn-secondary btn-back" onclick="navigateTo('screen-home')">← Home</button>
+            <div class="doc-container">
+                <div class="doc-header">
+                    <h2>Terms of Service</h2>
+                    <p>Rules and Guidelines</p>
+                </div>
+                <div class="doc-content">
+                    <h3>1. Usage</h3>
+                    <p>TypingPro Ultra is provided "as is" for educational and practice purposes.</p>
+                    <h3>2. Intellectual Property</h3>
+                    <p>The design, code, and branding of TypingPro Ultra are the property of the developer.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADSTERRA BOTTOM BANNER -->
+    <div class="ad-slot">
+        <!-- PASTE YOUR ADSTERRA BOTTOM BANNER SCRIPT HERE -->
+        <span>Ad Placement: Bottom Banner (728x90)</span>
+    </div>
+
+    <footer>
+        <div class="footer-links">
+            <a onclick="navigateTo('screen-tos')">Terms of Service</a>
+            <a onclick="navigateTo('screen-privacy')">Privacy Policy</a>
+            <a onclick="navigateTo('screen-about')">About</a>
+            <a href="#">Contact Us</a>
+        </div>
+        <p>&copy; 2026 TypingPro Ultra. All rights reserved. Designed for Speed.</p>
+    </footer>
+
+    <script>
+        const texts = {
+            easy: ["the cat sat on the mat", "a quick brown fox jumps over the lazy dog", "simple words are easy to type", "the blue bird sang a song", "i love to type on my computer"],
+            medium: ["Success is not final failure is not fatal it is the courage to continue that counts.", "Typing fast requires practice and focus every single day.", "The only way to do great work is to love what you do.", "Believe in yourself and all that you are capable of.", "Persistence is the key to unlocking your full potential."],
+            hard: ["The juxtaposition of quantum mechanics and general relativity remains profound.", "Phenomenological approaches to cognitive architecture provide insights.", "The socioeconomic implications of artificial intelligence are complex.", "Ephemeral nature of existence is reflected in cosmic dust.", "Synchronicity is the simultaneous occurrence of related events."]
+        };
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(freq, type = 'sine', duration = 0.1) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+        }
+
+        let timeLeft, timerInterval, isPlaying = false, charIndex = 0, mistakes = 0, currentText = "", streak = 0, wpmData = [];
+        let chart = null;
+
+        const elements = {
+            display: document.getElementById('text-display'),
+            input: document.getElementById('input-field'),
+            timer: document.getElementById('timer'),
+            wpm: document.getElementById('wpm'),
+            acc: document.getElementById('accuracy'),
+            mistakes: document.getElementById('mistake-count'),
+            bestWpm: document.getElementById('best-wpm'),
+            diff: document.getElementById('difficulty'),
+            time: document.getElementById('time-limit'),
+            customInp: document.getElementById('custom-text-input'),
+            streakBadge: document.getElementById('streak-badge'),
+            streakCount: document.getElementById('streak-count'),
+            keyboard: document.getElementById('virtual-keyboard'),
+            fontSlider: document.getElementById('font-size-slider'),
+            themeSelect: document.getElementById('theme-select')
+        };
+
+        function navigateTo(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            const navBtnMap = {
+                'screen-home': 'nav-home',
+                'screen-typing': 'nav-typing',
+                'screen-settings': 'nav-settings',
+                'screen-analytics': 'nav-analytics'
+            };
+            if(navBtnMap[screenId]) {
+                document.getElementById(navBtnMap[screenId]).classList.add('active');
+            }
+
+            if(screenId === 'screen-typing') initGame();
+            if(screenId === 'screen-analytics') renderAnalytics();
+        }
+
+        function initKeyboard() {
+            const layout = [
+                { row: 'row-1', keys: ["`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "Backspace"] },
+                { row: 'row-2', keys: ["Tab", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]", "\\"] },
+                { row: 'row-3', keys: ["Caps", "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "Enter"] },
+                { row: 'row-4', keys: ["Shift", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "Shift"] },
+                { row: 'row-5', keys: ["Ctrl", "Alt", "Space", "Alt", "Ctrl"] }
+            ];
+            
+            elements.keyboard.innerHTML = "";
+            layout.forEach(item => {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = `kb-row ${item.row}`;
+                
+                item.keys.forEach(key => {
+                    const span = document.createElement('div');
+                    span.className = 'key';
+                    span.innerText = key;
+                    
+                    if(["Backspace", "Tab", "Caps", "Enter", "Shift"].includes(key)) span.classList.add('wide');
+                    if(key === "Space") span.classList.add('space');
+                    
+                    const cleanKey = key.toLowerCase() === "space" ? " " : key.toLowerCase();
+                    span.id = `key-${cleanKey}`;
+                    
+                    span.onclick = () => {
+                        if(!isPlaying && elements.input.disabled === false) {
+                            elements.input.focus();
+                        }
+                        const event = new Event('input', { bubbles: true });
+                        elements.input.value += (key === "Space" ? " " : key === "Backspace" ? "" : key);
+                        elements.input.dispatchEvent(event);
+                    };
+                    
+                    rowDiv.appendChild(span);
+                });
+                elements.keyboard.appendChild(rowDiv);
+            });
+        }
+
+        function initGame() {
+            clearInterval(timerInterval);
+            isPlaying = false; charIndex = 0; mistakes = 0; streak = 0; wpmData = [];
+            timeLeft = parseInt(elements.time.value);
+            
+            elements.timer.innerText = timeLeft + "s";
+            elements.wpm.innerText = "0";
+            elements.acc.innerText = "100%";
+            elements.mistakes.innerText = "0";
+            elements.input.value = "";
+            elements.input.disabled = false;
+            elements.streakBadge.classList.remove('show');
+
+            if (elements.diff.value === 'custom') {
+                currentText = elements.customInp.value.trim() || "Please enter some text!";
+            } else {
+                const options = texts[elements.diff.value];
+                currentText = options[Math.floor(Math.random() * options.length)];
+            }
+
+            renderText();
+            elements.input.focus();
+        }
+
+        function renderText() {
+            elements.display.innerHTML = "";
+            currentText.split("").forEach(char => {
+                elements.display.innerHTML += `<span class="char">${char}</span>`;
+            });
+            const chars = elements.display.querySelectorAll('.char');
+            if (chars.length > 0) chars[0].classList.add('current');
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    elements.timer.innerText = timeLeft + "s";
+                    updateWPM();
+                } else {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function updateWPM() {
+            let timeElapsed = parseInt(elements.time.value) - timeLeft;
+            if (timeElapsed <= 0) return;
+            let wpm = Math.round(((charIndex - mistakes) / 5) / (timeElapsed / 60));
+            wpm = wpm < 0 ? 0 : wpm;
+            elements.wpm.innerText = wpm;
+            wpmData.push(wpm);
+        }
+
+        function endGame() {
+            clearInterval(timerInterval);
+            isPlaying = false;
+            elements.input.disabled = true;
+            
+            const finalWpm = parseInt(elements.wpm.innerText);
+            const best = localStorage.getItem('typingProBest') || 0;
+            if (finalWpm > best) localStorage.setItem('typingProBest', finalWpm);
+
+            let rank = "🐢 Snail";
+            if (finalWpm > 80) rank = "⚡ Flash";
+            else if (finalWpm > 50) rank = "🐆 Cheetah";
+            else if (finalWpm > 30) rank = "🐇 Rabbit";
+
+            document.getElementById('res-wpm').innerText = finalWpm;
+            document.getElementById('res-acc').innerText = elements.acc.innerText;
+            document.getElementById('res-err').innerText = mistakes;
+            document.getElementById('res-rank').innerText = rank;
+            
+            navigateTo('screen-result');
+            playSound(200, 'square', 0.3);
+        }
+
+        elements.input.addEventListener('input', () => {
+            const characters = elements.display.querySelectorAll('.char');
+            let typedChar = elements.input.value.split("")[charIndex];
+
+            if (!isPlaying) {
+                isPlaying = true;
+                startTimer();
+            }
+
+            if (typedChar == null) {
+                if (charIndex > 0) {
+                    charIndex--;
+                    characters[charIndex].classList.remove('correct', 'wrong');
+                }
+            } else {
+                if (characters[charIndex].innerText === typedChar) {
+                    characters[charIndex].classList.add('correct');
+                    streak++;
+                    playSound(440, 'sine', 0.05);
+                } else {
+                    characters[charIndex].classList.add('wrong');
+                    mistakes++;
+                    streak = 0;
+                    elements.mistakes.innerText = mistakes;
+                    playSound(150, 'sawtooth', 0.1);
+                }
+                charIndex++;
+            }
+
+            if (streak >= 5) {
+                elements.streakBadge.classList.add('show');
+                elements.streakCount.innerText = streak;
+            } else {
+                elements.streakBadge.classList.remove('show');
+            }
+
+            characters.forEach(span => span.classList.remove('current'));
+            if (charIndex < characters.length) {
+                characters[charIndex].classList.add('current');
+                const charToHighlight = characters[charIndex].innerText.toLowerCase();
+                document.querySelectorAll('.key').forEach(k => k.classList.remove('active'));
+                const keyEl = document.getElementById(`key-${charToHighlight}`);
+                if (keyEl) keyEl.classList.add('active');
+            } else {
+                endGame();
+            }
+
+            let accuracy = Math.round(((charIndex - mistakes) / charIndex) * 100);
+            elements.acc.innerText = (isNaN(accuracy) || accuracy < 0 ? 100 : accuracy) + "%";
+        });
+
+        function renderAnalytics() {
+            const best = localStorage.getItem('typingProBest') || 0;
+            document.getElementById('best-wpm').innerText = best;
+            
+            const currentWpm = wpmData.length > 0 ? wpmData[wpmData.length - 1] : 0;
+            document.getElementById('current-session-wpm').innerText = currentWpm;
+            
+            // Mock average accuracy for UI
+            document.getElementById('avg-accuracy').innerText = "95%"; 
+            
+            const ctx = document.getElementById('wpmChart').getContext('2d');
+            if(chart) chart.destroy();
+            
+            const plotData = wpmData.length > 0 ? wpmData : [0];
+            const labels = plotData.map((_, i) => i + 1);
+
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Session WPM',
+                        data: plotData,
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { 
+                        x: { display: false }, 
+                        y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: '#334155' } } 
+                    }
+                }
+            });
+        }
+
+        elements.fontSlider.addEventListener('input', (e) => {
+            elements.display.style.fontSize = e.target.value + "rem";
+        });
+
+        elements.themeSelect.addEventListener('change', (e) => {
+            document.body.className = "";
+            if (e.target.value !== 'dark') document.body.classList.add(`theme-${e.target.value}`);
+        });
+
+        elements.diff.addEventListener('change', () => {
+            document.getElementById('custom-text-box').style.display = (elements.diff.value === 'custom') ? 'block' : 'none';
+        });
+
+        window.onload = () => {
+            initKeyboard();
+        };
+    </script>
+</body>
+</html>
